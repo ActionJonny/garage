@@ -46,3 +46,13 @@ app.get('/api/v1/model/:id', (request, response) => {
       response.status(500).send(`${error}`);
     });
 })
+
+app.post('/api/v1/model', (request, response) => {
+  database('model').insert(request.body)
+  .then(model => {
+    response.status(201).json(request.body);
+  })
+  .catch(() => {
+    response.status(422).send('You are missing some data');
+  });
+})
