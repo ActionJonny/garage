@@ -64,3 +64,13 @@ app.post('/api/v1/model', (request, response) => {
     response.status(422).send(`${error}`);
   });
 });
+
+app.patch('/api/v1/model/:id', (request, response) => {
+  database('model').where('id', request.params.id).update(request.body)
+  .then(() => {
+    response.status(200).json(request.body)
+  })
+  .catch(() => {
+    response.status(404).send('ID not found or invalid.');
+  })
+})

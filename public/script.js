@@ -1,10 +1,12 @@
 
 $(document).ready(() => {
   fetchGarbage();
-});
+})
 
 const fetchGarbage = () => {
-  fetch('/api/v1/model')
+  fetch('/api/v1/model', {
+    async:false,
+  })
   .then((response) => response.json())
   .then((json) => {
     json.map(garbage => appendGarbage(garbage))
