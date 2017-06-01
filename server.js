@@ -27,11 +27,15 @@ app.get('/', (request, response) => {
 app.get('/api/v1/model', (request, response) => {
   database('model').select()
     .then((model) => {
-      response.status(200).json(model);
+      if(!model.length) {
+        response.send(`You do not have anything in your garage`)
+      } else {
+          response.status(200).json(model);
+      }
     })
     .catch((error) => {
-      response.status(404).send(`We cannot find the url you were looking for. ${error}`);
-    });
+      response.status(500).send(`${error}`);
+    })
 });
 
 app.get('/api/v1/model/:id', (request, response) => {
@@ -49,9 +53,12 @@ app.get('/api/v1/model/:id', (request, response) => {
 });
 
 app.post('/api/v1/model', (request, response) => {
-  database('model').insert(request.body)
-  .then((model) => {
-    response.status(201).json(model);
+  const { name, reason, cleanliness } = request.body;
+  const garbage = { name, reason, cleanliness }
+
+  database('model').insert(garbage, ['id', 'name', 'cleanliness', 'reason'])
+  .then((garbage) => {
+    response.status(201).json(garbage[0]);
   })
   .catch((error) => {
     response.status(422).send(`${error}`);
