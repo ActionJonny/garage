@@ -20,6 +20,22 @@ const addNewGarbage = () => {
   let reasonVal = $('.new-reason').val()
   let cleanlinessVal = $('.new-cleanliness').val()
 
+  checkForEmptyString(nameVal, reasonVal, cleanlinessVal)
+
+  $('.new-name').val('')
+  $('.new-reason').val('')
+}
+
+const checkForEmptyString = (name, reason, cleanliness) => {
+  $('.error-message').remove()
+  if(name === '' || reason === '') {
+    displayError()
+  } else {
+    postModel(name, reason, cleanliness)
+  }
+}
+
+const postModel = (nameVal, reasonVal, cleanlinessVal) => {
   fetch('/api/v1/model', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -44,8 +60,8 @@ const appendGarbage = (obj) => {
   ` );
 }
 
-const displayError = (error) => {
+const displayError = () => {
   $('.add-new-card').append(`
-    <p>${error}</p>
+    <p class="error-message">You are missing information</p>
   `)
 }
