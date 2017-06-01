@@ -1,0 +1,9 @@
+{
+    "extends": "jquery",
+    "plugins": [
+        "import"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 5
+    }
+}
