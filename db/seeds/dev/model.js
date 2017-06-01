@@ -7,6 +7,11 @@ exports.seed = function(knex, Promise) {
           name: 'trash',
           reason: 'you should not keep too many things',
           cleanliness: 'Rancid'
+        }, 'id'),
+        knex('model').insert({
+          name: 'talkboy',
+          reason: 'I had it since I was a kid',
+          cleanliness: 'Sparkling'
         }, 'id')
       ])
     })
