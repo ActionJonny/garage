@@ -1,5 +1,17 @@
+html {
+  /*background: url(./images/garage.svg) no-repeat;*/
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+
+.garbage {
+  display: flex;
+}
+
 .garbage-card {
   display: flex;
   flex-direction: column;
-  border: 2px solid black;
+  border: 1px solid black;
+  width: 50%;
 }

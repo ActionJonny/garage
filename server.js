@@ -14,10 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('port', process.env.PORT || 3001);
 
-app.listen(app.get('port'), () => {
-  console.log(`port is running on ${app.get('port')}.`);
-});
-
 app.get('/', (request, response) => {
   fs.readFile(`${__dirname}/index.html`, (err, file) => {
     response.send(file);
@@ -34,7 +30,7 @@ app.get('/api/v1/model', (request, response) => {
       }
     })
     .catch((error) => {
-      response.status(500).send(`${error}`);
+      response.status(404).send(`${error}`);
     })
 });
 
@@ -68,9 +64,15 @@ app.post('/api/v1/model', (request, response) => {
 app.patch('/api/v1/model/:id', (request, response) => {
   database('model').where('id', request.params.id).update(request.body)
   .then(() => {
-    response.status(200).json(request.body)
+    response.status(201).json(request.body)
   })
   .catch(() => {
     response.status(404).send('ID not found or invalid.');
   })
 })
+
+app.listen(app.get('port'), () => {
+  (`port is running on ${app.get('port')}`);
+});
+
+module.exports = app;
