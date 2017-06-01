@@ -11,7 +11,12 @@
     <section class="add-new-card">
       <input type="text" class="new-name" placeholder="Name">
       <input type="text" class="new-reason" placeholder="Reason">
-      <input type="text" class="new-cleanliness" placeholder="Cleanliness">
+      <input type="text" class="new-cleanliness" placeholder="Cleanliness" list="cleanliness">
+      <datalist id="cleanliness">
+        <option value="sparkling">
+        <option value="dusty">
+        <option value="rancid">
+      </datalist>
       <button type="button" class="add-new" name="button">Add New</button>
     </section>
     <section>
