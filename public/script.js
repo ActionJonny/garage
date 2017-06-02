@@ -128,8 +128,8 @@ const displayError = () => {
 }
 
 $('.sort').on('click', () => {
-  return fetchArray.map((array) => {
-    return array.sort((a, b) => {
+  fetchArray.map((array) => {
+    array.map((a, b) => {
       compareName(a, b)
     })
   })
@@ -137,11 +137,12 @@ $('.sort').on('click', () => {
 
 const compareName = (a, b) => {
   if (a.name < b.name) {
-    return a.name;
+    return -1;
   }
   if (a.name > b.name) {
-    return b.name;
+    return 1;
   }
+  return 0
 }
 
 $('.add-new').on('click', () => {
