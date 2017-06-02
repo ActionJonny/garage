@@ -1,3 +1,7 @@
+let sparklingCount = 0;
+let dustyCount = 0;
+let rancidCount = 0;
+let fetchArray = []
 
 $(document).ready(() => {
   fetchGarbage();
@@ -11,6 +15,7 @@ const fetchGarbage = () => {
   })
   .then((response) => response.json())
   .then((json) => {
+    fetchArray.push(json)
     json.map(garbage => {
       objArray.push(garbage)
       appendGarbage(garbage)
@@ -25,10 +30,6 @@ const numberOfItems = (array) => {
 }
 
 const checkCleanlinessQuantity = (array) => {
-  let sparklingCount = 0;
-  let dustyCount = 0;
-  let rancidCount = 0;
-
   array.map((obj, index) => {
     if(obj.cleanliness === 'sparkling') {
       sparklingCount++
@@ -38,15 +39,22 @@ const checkCleanlinessQuantity = (array) => {
       rancidCount++
     }
   })
+  updateQuantity()
+}
+
+const updateQuantity = () => {
+  $('.counter').remove()
   $('.count').append(`
-    <div class="sparkling-count">Sparkling: ${sparklingCount}</div>
-    <div class="dusty-count">Dusty: ${dustyCount}</div>
-    <div class="rancid-count">Rancid: ${rancidCount}</div>
+    <div class="counter">
+      <div class="sparkling-count">Sparkling: ${sparklingCount}</div>
+      <div class="dusty-count">Dusty: ${dustyCount}</div>
+      <div class="rancid-count">Rancid: ${rancidCount}</div>
+    </div>
     `)
 }
 
 const appendNumberOfItemsDiv = (length) => {
-  $('.arrayLength').remove()
+  $('.array-length').remove()
   $('.count').append(`
     <div class="array-length">Number of Items: ${length}<div>
   `)
@@ -56,6 +64,16 @@ const addNewGarbage = () => {
   let nameVal = $('.new-name').val()
   let reasonVal = $('.new-reason').val()
   let cleanlinessVal = $('.new-cleanliness').val()
+
+  if(cleanlinessVal === 'sparkling') {
+    sparklingCount++
+  } else if(cleanlinessVal === 'dusty') {
+    dustyCount++
+  } else if(cleanlinessVal === 'rancid') {
+    rancidCount++
+  }
+
+  updateQuantity()
 
   checkForEmptyString(nameVal, reasonVal, cleanlinessVal)
 
@@ -86,6 +104,7 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
     return response.json()
   })
   .then(json => {
+    fetchArray.push(json)
     appendGarbage(json)
     fetchGarbage()
   })
@@ -106,6 +125,23 @@ const displayError = () => {
   $('.add-new-card').append(`
     <p class="error-message">You are missing information</p>
   `)
+}
+
+$('.sort').on('click', () => {
+  return fetchArray.map((array) => {
+    return array.sort((a, b) => {
+      compareName(a, b)
+    })
+  })
+})
+
+const compareName = (a, b) => {
+  if (a.name < b.name) {
+    return a.name;
+  }
+  if (a.name > b.name) {
+    return b.name;
+  }
 }
 
 $('.add-new').on('click', () => {
