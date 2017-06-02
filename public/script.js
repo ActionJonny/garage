@@ -13,9 +13,9 @@ const fetchGarbage = () => {
   .then((json) => {
     json.map(garbage => {
       objArray.push(garbage)
-      numberOfItems(objArray)
       appendGarbage(garbage)
     })
+    numberOfItems(objArray)
   });
 };
 
@@ -25,15 +25,30 @@ const numberOfItems = (array) => {
 }
 
 const checkCleanlinessQuantity = (array) => {
-  array.map(obj => {
-    console.log(obj.cleanliness);
+  let sparklingCount = 0;
+  let dustyCount = 0;
+  let rancidCount = 0;
+
+  array.map((obj, index) => {
+    if(obj.cleanliness === 'sparkling') {
+      sparklingCount++
+    } else if(obj.cleanliness === 'dusty') {
+      dustyCount++
+    } else if(obj.cleanliness === 'rancid') {
+      rancidCount++
+    }
   })
+  $('.count').append(`
+    <div class="sparkling-count">Sparkling: ${sparklingCount}</div>
+    <div class="dusty-count">Dusty: ${dustyCount}</div>
+    <div class="rancid-count">Rancid: ${rancidCount}</div>
+    `)
 }
 
 const appendNumberOfItemsDiv = (length) => {
   $('.arrayLength').remove()
   $('.count').append(`
-    <div class="arrayLength">Number of Items: ${length}<div>
+    <div class="array-length">Number of Items: ${length}<div>
   `)
 }
 
@@ -96,12 +111,3 @@ const displayError = () => {
 $('.add-new').on('click', () => {
   addNewGarbage()
 })
-
-
-
-
-
-      // $('.garbage').on('click', '.garbage-card', () => {
-      //   const folderId = $(this).attr('name')
-      //   console.log(folderId);
-      // })
