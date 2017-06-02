@@ -128,22 +128,16 @@ const displayError = () => {
 }
 
 $('.sort').on('click', () => {
-  fetchArray.map((array) => {
-    array.map((a, b) => {
-      compareName(a, b)
-    })
+  fetch('/api/v1/model', {
+    async:false,
   })
+  .then((response) => response.json())
+  .then((json) => {
+    json.sort((obj1, obj2) => {
+      return obj2[name] - obj1[name]
+    })
+  });
 })
-
-const compareName = (a, b) => {
-  if (a.name < b.name) {
-    return -1;
-  }
-  if (a.name > b.name) {
-    return 1;
-  }
-  return 0
-}
 
 $('.add-new').on('click', () => {
   addNewGarbage()
