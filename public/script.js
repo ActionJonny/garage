@@ -53,7 +53,7 @@ const updateQuantity = (sparklingCount, dustyCount, rancidCount) => {
 const appendNumberOfItemsDiv = (length) => {
   $('.array-length').remove()
   $('.count').append(`
-    <div class="array-length">Number of Items: ${length}<div>
+    <div class="array-length">Number of Items: ${length}</div>
   `)
 }
 
@@ -99,11 +99,11 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
 
 const appendGarbage = (obj) => {
   $('.garbage').append(`
-    <div class="garbage-card">
+    <div class="garbage-card" id="${obj.id}">
       <p class="name">Name: ${obj.name}</p>
-      <div class="hidden">
+      <div class="hidden reason">
         <p>Reason: ${obj.reason}</p>
-        <p class="clean" editable>Cleanliness: ${obj.cleanliness}</p>
+        <p class="clean">Cleanliness: ${obj.cleanliness}</p>
       </div>
     </div>
   `);
@@ -132,6 +132,23 @@ const sort = (array) => {
   }
 }
 
+const patchModel = (id, cleanlinessVal) => {
+  console.log(id, cleanlinessVal);
+  fetch(`/api/v1/model/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cleanliness: cleanlinessVal })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(json => {
+    appendGarbage(json)
+    fetchGarbage()
+  })
+  .catch(error => displayError(error))
+}
+
 $('.sort').on('click', () => {
   $('.garbage-card').remove()
   fetch('/api/v1/model', {
@@ -150,33 +167,25 @@ $('.add-new').on('click', () => {
   addNewGarbage()
 })
 
-// $('.garbage').on('click', '.garbage-card', function() {
-//   // $(this).find('div').toggleClass('hidden')
-//   // $(this).find('.clean').append(`
-//   //   <select class="new-cleanliness" name="cleanliness">
-//   //     <option value="sparkling">Sparkling</option>
-//   //     <option value="dusty">Dusty</option>
-//   //     <option value="rancid">Rancid</option>
-//   //   </select>
-//   // `)
-// })
+$('.garbage').on('click', '.garbage-card .name', function() {
+  $(this).closest('.garbage-card').find('div').toggleClass('hidden')
+  appendCleanDropDown(this)
+})
 
+$('.garbage').on('click', '.garbage-card button', function() {
+  let id = $(this).closest('.garbage-card')[0].id
+  let buttonVal = $(this).val()
+  patchModel(id, buttonVal)
+})
 
-
-const patchModel = (cleanlinessVal) => {
-  fetch('/api/v1/model', {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ cleanliness: cleanlinessVal })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(json => {
-    appendGarbage(json)
-    fetchGarbage()
-  })
-  .catch(error => displayError(error))
+const appendCleanDropDown = (closestDiv) => {
+  let newCleanliness = $(closestDiv).closest('.garbage-card').find('.reason').children('.new-cleanliness')
+  newCleanliness.remove()
+  $(closestDiv).closest('.garbage-card').find('.reason').append(`
+    <button value="sparkling">Sparkling</button>
+    <button value="dusty">Dusty</button>
+    <button value="rancid">Rancid</button>
+  `)
 }
 
 $('.triggerGarage').on('click', () => {
