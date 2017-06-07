@@ -1,10 +1,12 @@
-
-
 .container {
   width: 735px;
   margin: 0 auto;
   padding: 20px;
   position: relative;
+}
+
+.triggerGarage {
+  margin: auto
 }
 
 img {
