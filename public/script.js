@@ -100,10 +100,10 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
 const appendGarbage = (obj) => {
   $('.garbage').append(`
     <div class="garbage-card">
-      <p>Name: ${obj.name}</p>
+      <p class="name">Name: ${obj.name}</p>
       <div class="hidden">
         <p>Reason: ${obj.reason}</p>
-        <p>Cleanliness: ${obj.cleanliness}</p>
+        <p class="clean" editable>Cleanliness: ${obj.cleanliness}</p>
       </div>
     </div>
   `);
@@ -151,5 +151,33 @@ $('.add-new').on('click', () => {
 })
 
 $('.garbage').on('click', '.garbage-card', function() {
+  console.log();
   $(this).find('div').toggleClass('hidden')
+  // $(this).find('.clean').append(`
+  //   <select class="new-cleanliness" name="cleanliness">
+  //     <option value="sparkling">Sparkling</option>
+  //     <option value="dusty">Dusty</option>
+  //     <option value="rancid">Rancid</option>
+  //   </select>
+  // `)
+})
+
+const patchModel = (cleanlinessVal) => {
+  fetch('/api/v1/model', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cleanliness: cleanlinessVal })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(json => {
+    appendGarbage(json)
+    fetchGarbage()
+  })
+  .catch(error => displayError(error))
+}
+
+$('.triggerGarage').on('click', () => {
+  $('img').toggleClass('hoverGarage')
 })
