@@ -150,16 +150,18 @@ $('.add-new').on('click', () => {
   addNewGarbage()
 })
 
-$('.garbage').on('click', '.garbage-card', function() {
-  $(this).find('div').toggleClass('hidden')
-  // $(this).find('.clean').append(`
-  //   <select class="new-cleanliness" name="cleanliness">
-  //     <option value="sparkling">Sparkling</option>
-  //     <option value="dusty">Dusty</option>
-  //     <option value="rancid">Rancid</option>
-  //   </select>
-  // `)
-})
+// $('.garbage').on('click', '.garbage-card', function() {
+//   // $(this).find('div').toggleClass('hidden')
+//   // $(this).find('.clean').append(`
+//   //   <select class="new-cleanliness" name="cleanliness">
+//   //     <option value="sparkling">Sparkling</option>
+//   //     <option value="dusty">Dusty</option>
+//   //     <option value="rancid">Rancid</option>
+//   //   </select>
+//   // `)
+// })
+
+
 
 const patchModel = (cleanlinessVal) => {
   fetch('/api/v1/model', {
