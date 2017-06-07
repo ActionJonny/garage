@@ -100,9 +100,11 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
 const appendGarbage = (obj) => {
   $('.garbage').append(`
     <div class="garbage-card">
-    <p>Name: ${obj.name}</p>
-    <p>Reason: ${obj.reason}</p>
-    <p>Cleanliness: ${obj.cleanliness}</p>
+      <p>Name: ${obj.name}</p>
+      <div class="hidden">
+        <p>Reason: ${obj.reason}</p>
+        <p>Cleanliness: ${obj.cleanliness}</p>
+      </div>
     </div>
   `);
 }
@@ -146,4 +148,8 @@ $('.sort').on('click', () => {
 
 $('.add-new').on('click', () => {
   addNewGarbage()
+})
+
+$('.garbage').on('click', '.garbage-card', function() {
+  $(this).find('div').toggleClass('hidden')
 })

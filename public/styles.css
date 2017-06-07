@@ -27,6 +27,10 @@ body {
   border-top: solid 100px #ccc;
 }*/
 
+.hidden {
+  display: none;
+}
+
 .sliding:hover {
   border: solid 0px;
 }
