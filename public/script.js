@@ -1,26 +1,19 @@
-let sparklingCount = 0;
-let dustyCount = 0;
-let rancidCount = 0;
-let fetchArray = []
-
 $(document).ready(() => {
   fetchGarbage();
 })
 
 const fetchGarbage = () => {
   $('.garbage-card').remove()
-  const objArray = []
   fetch('/api/v1/model', {
     async:false,
   })
   .then((response) => response.json())
   .then((json) => {
-    fetchArray.push(json)
-    json.map(garbage => {
-      objArray.push(garbage)
+    console.log(json);
+    json.forEach((garbage) => {
       appendGarbage(garbage)
     })
-    numberOfItems(objArray)
+    numberOfItems(json)
   });
 };
 
@@ -30,7 +23,10 @@ const numberOfItems = (array) => {
 }
 
 const checkCleanlinessQuantity = (array) => {
-  array.map((obj, index) => {
+  let sparklingCount = 0;
+  let dustyCount = 0;
+  let rancidCount = 0;
+  array.forEach((obj) => {
     if(obj.cleanliness === 'sparkling') {
       sparklingCount++
     } else if(obj.cleanliness === 'dusty') {
@@ -38,11 +34,11 @@ const checkCleanlinessQuantity = (array) => {
     } else if(obj.cleanliness === 'rancid') {
       rancidCount++
     }
+    updateQuantity(sparklingCount, dustyCount, rancidCount)
   })
-  updateQuantity()
 }
 
-const updateQuantity = () => {
+const updateQuantity = (sparklingCount, dustyCount, rancidCount) => {
   $('.counter').remove()
   $('.count').append(`
     <div class="counter">
@@ -64,16 +60,6 @@ const addNewGarbage = () => {
   let nameVal = $('.new-name').val()
   let reasonVal = $('.new-reason').val()
   let cleanlinessVal = $('.new-cleanliness').val()
-
-  if(cleanlinessVal === 'sparkling') {
-    sparklingCount++
-  } else if(cleanlinessVal === 'dusty') {
-    dustyCount++
-  } else if(cleanlinessVal === 'rancid') {
-    rancidCount++
-  }
-
-  updateQuantity()
 
   checkForEmptyString(nameVal, reasonVal, cleanlinessVal)
 
@@ -104,7 +90,6 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
     return response.json()
   })
   .then(json => {
-    fetchArray.push(json)
     appendGarbage(json)
     fetchGarbage()
   })
