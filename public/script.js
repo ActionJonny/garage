@@ -151,7 +151,6 @@ $('.add-new').on('click', () => {
 })
 
 $('.garbage').on('click', '.garbage-card', function() {
-  console.log();
   $(this).find('div').toggleClass('hidden')
   // $(this).find('.clean').append(`
   //   <select class="new-cleanliness" name="cleanliness">
