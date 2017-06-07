@@ -1,7 +1,4 @@
-let sparklingCount = 0;
-let dustyCount = 0;
-let rancidCount = 0;
-let fetchArray = []
+let reverse = 0
 
 $(document).ready(() => {
   fetchGarbage();
@@ -9,18 +6,15 @@ $(document).ready(() => {
 
 const fetchGarbage = () => {
   $('.garbage-card').remove()
-  const objArray = []
   fetch('/api/v1/model', {
     async:false,
   })
   .then((response) => response.json())
   .then((json) => {
-    fetchArray.push(json)
-    json.map(garbage => {
-      objArray.push(garbage)
+    json.forEach((garbage) => {
       appendGarbage(garbage)
     })
-    numberOfItems(objArray)
+    numberOfItems(json)
   });
 };
 
@@ -30,7 +24,10 @@ const numberOfItems = (array) => {
 }
 
 const checkCleanlinessQuantity = (array) => {
-  array.map((obj, index) => {
+  let sparklingCount = 0;
+  let dustyCount = 0;
+  let rancidCount = 0;
+  array.forEach((obj) => {
     if(obj.cleanliness === 'sparkling') {
       sparklingCount++
     } else if(obj.cleanliness === 'dusty') {
@@ -38,11 +35,11 @@ const checkCleanlinessQuantity = (array) => {
     } else if(obj.cleanliness === 'rancid') {
       rancidCount++
     }
+    updateQuantity(sparklingCount, dustyCount, rancidCount)
   })
-  updateQuantity()
 }
 
-const updateQuantity = () => {
+const updateQuantity = (sparklingCount, dustyCount, rancidCount) => {
   $('.counter').remove()
   $('.count').append(`
     <div class="counter">
@@ -64,16 +61,6 @@ const addNewGarbage = () => {
   let nameVal = $('.new-name').val()
   let reasonVal = $('.new-reason').val()
   let cleanlinessVal = $('.new-cleanliness').val()
-
-  if(cleanlinessVal === 'sparkling') {
-    sparklingCount++
-  } else if(cleanlinessVal === 'dusty') {
-    dustyCount++
-  } else if(cleanlinessVal === 'rancid') {
-    rancidCount++
-  }
-
-  updateQuantity()
 
   checkForEmptyString(nameVal, reasonVal, cleanlinessVal)
 
@@ -104,7 +91,6 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
     return response.json()
   })
   .then(json => {
-    fetchArray.push(json)
     appendGarbage(json)
     fetchGarbage()
   })
@@ -114,9 +100,11 @@ const postModel = (nameVal, reasonVal, cleanlinessVal) => {
 const appendGarbage = (obj) => {
   $('.garbage').append(`
     <div class="garbage-card">
-    <p>Name: ${obj.name}</p>
-    <p>Reason: ${obj.reason}</p>
-    <p>Cleanliness: ${obj.cleanliness}</p>
+      <p class="name">Name: ${obj.name}</p>
+      <div class="hidden">
+        <p>Reason: ${obj.reason}</p>
+        <p class="clean" editable>Cleanliness: ${obj.cleanliness}</p>
+      </div>
     </div>
   `);
 }
@@ -127,18 +115,68 @@ const displayError = () => {
   `)
 }
 
+const sort = (array) => {
+  array.sort((obj1, obj2) => {
+    if(obj1.name < obj2.name) {
+      return -1
+    }
+    if (obj1.name > obj2.name) {
+      return 1
+    }
+  })
+  if(reverse % 2 === 0) {
+    reverse++
+    array.reverse()
+  } else {
+    reverse++
+  }
+}
+
 $('.sort').on('click', () => {
+  $('.garbage-card').remove()
   fetch('/api/v1/model', {
     async:false,
   })
   .then((response) => response.json())
   .then((json) => {
-    json.sort((obj1, obj2) => {
-      return obj2[name] - obj1[name]
+    sort(json)
+    json.forEach((garbage) => {
+      appendGarbage(garbage)
     })
   });
 })
 
 $('.add-new').on('click', () => {
   addNewGarbage()
+})
+
+$('.garbage').on('click', '.garbage-card', function() {
+  $(this).find('div').toggleClass('hidden')
+  // $(this).find('.clean').append(`
+  //   <select class="new-cleanliness" name="cleanliness">
+  //     <option value="sparkling">Sparkling</option>
+  //     <option value="dusty">Dusty</option>
+  //     <option value="rancid">Rancid</option>
+  //   </select>
+  // `)
+})
+
+const patchModel = (cleanlinessVal) => {
+  fetch('/api/v1/model', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cleanliness: cleanlinessVal })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(json => {
+    appendGarbage(json)
+    fetchGarbage()
+  })
+  .catch(error => displayError(error))
+}
+
+$('.triggerGarage').on('click', () => {
+  $('img').toggleClass('hoverGarage')
 })

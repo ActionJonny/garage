@@ -1,34 +1,31 @@
-body {
+.container {
   width: 735px;
-  text-align: center;
-  align-content: center;
   margin: 0 auto;
   padding: 20px;
-}
-
-/*.door {
-  color: #fff;
-  overflow: hidden;
-  width: 700px;
-  height: auto;
   position: relative;
-  float: left;
-  margin: 15px;
-  box-sizing: border-box;
-  transition: border .7s ease;
-  border-radius: 3px;
-  box-shadow:
-    0 0 10px #000,
-    0 0 0 5px #fff;
 }
 
-.sliding {
-  background: url(./images/garage.svg);
-  border-top: solid 100px #ccc;
-}*/
+.triggerGarage {
+  margin: 0 370px;
+}
 
-.sliding:hover {
-  border: solid 0px;
+img {
+  transition: background-position 0.7s ease;
+  z-index: 1000;
+  position: absolute;
+}
+
+.hoverGarage {
+  top: -150%;
+}
+
+.door {
+  padding-top: 70px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
 }
 
 .garbage {
