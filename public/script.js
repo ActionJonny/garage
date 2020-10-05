@@ -2,7 +2,7 @@ let reverse = 0
 
 $(document).ready(() => {
   fetchGarbage();
-})
+});
 
 const fetchGarbage = () => {
   $('.garbage-card').remove()
@@ -12,16 +12,16 @@ const fetchGarbage = () => {
   .then((response) => response.json())
   .then((json) => {
     json.forEach((garbage) => {
-      appendGarbage(garbage)
+      appendGarbage(garbage);
     })
-    numberOfItems(json)
+    numberOfItems(json);
   });
 };
 
 const numberOfItems = (array) => {
-  appendNumberOfItemsDiv(array.length)
-  checkCleanlinessQuantity(array)
-}
+  appendNumberOfItemsDiv(array.length);
+  checkCleanlinessQuantity(array);
+};
 
 const checkCleanlinessQuantity = (array) => {
   let sparklingCount = 0;
